@@ -17,8 +17,11 @@ function main(line) {
 }
 
 const fibonacci = (n) => {
+  if (n === 0) {
+    return 0;
+  }
 
-  if (n <= 1) {
+  if (n === 1) {
     return 1;
   }
 
@@ -30,5 +33,5 @@ const fibonacci = (n) => {
      .map((_, k) => (2+k))      // start indices from index 2 to n
      .map(k => (fibArr[k] = (fibArr[k-1] + fibArr[k-2]) % 10))  // store new value's last in fibArr
 
-  return (fibArr[n-1] + fibArr[n-2]) > 10 ? (fibArr[n-1] + fibArr[n-2]) % 10 : (fibArr[n-1] + fibArr[n-2])
+  return (fibArr[n-1] + fibArr[n-2]) >= 10 ? (fibArr[n-1] + fibArr[n-2]) % 10 : (fibArr[n-1] + fibArr[n-2])
 }

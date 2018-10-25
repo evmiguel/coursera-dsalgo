@@ -1,6 +1,7 @@
 'use strict'
 
 const readline = require('readline')
+var BigNumber = require('big-number');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -34,8 +35,8 @@ const gcd = (n1, n2) => {
 const lcm = (n1, n2) => {
   // LCM = (a*b) / gcd
 
-  let p = n1*n2;
   let greatestCommonDivisor = gcd(n1,n2)
 
-  return p/greatestCommonDivisor
+  let n = BigNumber(n1).divide(greatestCommonDivisor).multiply(n2)
+  return n.number.reverse().join('')
 }
