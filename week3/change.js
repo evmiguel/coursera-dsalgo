@@ -26,7 +26,7 @@ function calculateChange(n, d, c) {
 	let denom = d[0]
 
 	if (n === 0) {
-		return Object.values(c).reduce((acc, val) => acc+val)
+		return Object.keys(c).map(k => c[k]).reduce((acc, val) => acc+val)
 	}
 
 	if (n >= denom) {
