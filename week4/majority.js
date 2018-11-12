@@ -46,6 +46,6 @@ function majority(n, array, countMap){
   majority(array.slice(0, majorityNum).length, array.slice(0, majorityNum), countMap)
   majority(array.slice(majorityNum, array.length).length, array.slice(majorityNum, array.length), countMap)
 
-  let majNum = Object.values(countMap).filter(v => v > majorityNum)
+  let majNum = Object.keys(countMap).filter(i => countMap[i] > majorityNum)
   return majNum.length > 0 ? 1 : 0
 }
