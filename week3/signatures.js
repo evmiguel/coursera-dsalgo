@@ -22,9 +22,7 @@ function main(line) {
 
   if (n && args.length === n) {
 
-    let minPoints = getPoints(args.sort((a, b) => a[0] - b[0])
-                                      .map(range => Array(range[1] - range[0]  + 1).fill().map((_,k) => k+range[0]))
-                                      .map(list => new Set(list)))
+    let minPoints = getMinPoints(args.sort((a, b) => a[0] - b[0]))
 
     console.log(minPoints.length)
     console.log(minPoints.join(' '))
@@ -33,29 +31,51 @@ function main(line) {
   }
 }
 
-function getMinPoints(points, intersections) {
-  if (points.length <= 1){
-    return intersections
+function getMinPoints(points) {
+  let pts = []
+  let pointer = points[0]
+  let intersections = []
+  let group = []
+
+  group.push(pointer.slice())
+
+
+  for (let i = 1; i < points.length; i++) {
+    let p = points[i]
+    if ((p[0] - pointer[1]) <= 0) {
+      group.push(p.slice())
+      if (i === points.length - 1) {
+        intersections.push(group.slice())
+      }
+    } else {
+      pointer = points[i]
+      intersections.push(group.slice())
+      group = []
+      group.push(pointer.slice())
+    }
   }
 
-  let intersection = [...points[0]].filter(x => points[1].has(x))
-  let newPoints = []
+  console.log(intersections)
 
-  if (intersection.length > 0) {
-    intersections.push(intersection)
-    newPoints = [intersection, ...points.slice(2)]
-  } else {
-    intersections.push([...points[0]])
-    newPoints = [...points.slice(1)]
+  for (let group of intersections) {
+    if (group.length === 1) {
+      pts.push(Math.max(group[0][0], group[0][1]))
+    } else {
+      let pointer = group[0]
+      let min
+      for (let i = 1; i < group.length; i++) {
+        let p = group[i]
+        if ((p[1] - pointer[1]) >= 0) {
+          min = pointer[1]
+        } else {
+          min = p[1]
+        }
+
+        pts.push(min)
+      }
+    }
   }
 
-  return getMinPoints(newPoints, intersections)
-}
-
-function getPoints(points){
-  let intersections = getMinPoints(points, [])
-  let pureIntersections = getMinPoints(intersections.map(i => new Set(i)),[])
-
-  return [...new Set(pureIntersections.map(p => Math.max(...p)))]
+  return [...new Set(pts)]
 }
 
