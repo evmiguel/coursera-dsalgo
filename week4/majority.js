@@ -22,30 +22,33 @@ function main(line) {
   }
 
   if (typeof n === 'number' && typeof array === 'object') {
-    let major = n > 0 ? majority(n, array.sort((a,b)=> a-b), {}) : 0
+    let major = n > 0 ? majority(array.sort((a,b)=> a-b), 0) : 0
     console.log(major)
     process.exit()
   }
 }
 
-function majority(n, array, countMap){
-  if (array.length === 0) {
+function majority(array, index){
+  if (index === array.length) {
     return 0
   }
 
-  if (array.length === 1) {
-    if (array[0] in countMap) {
-      countMap[array[0]]++
-    } else {
-      countMap[array[0]] = 1
+  let majorNumber = -Number.MAX_VALUE
+  let majorCount = 0
+
+  //go through multiple elements that are repeated
+  for (index; index < array.length; index++) {
+    if(array[index] > majorNumber) {
+      majorNumber = array[index]
+      majorCount = 1
+    } else if(array[index] === majorNumber){
+      majorCount++
     }
-    return 1
+
+    if (majorCount/array.length > .5) {
+      return 1
+    }
   }
 
-  let majorityNum = Math.floor(n/2)
-  majority(array.slice(0, majorityNum).length, array.slice(0, majorityNum), countMap)
-  majority(array.slice(majorityNum, array.length).length, array.slice(majorityNum, array.length), countMap)
-
-  let majNum = Object.keys(countMap).filter(i => countMap[i] > majorityNum)
-  return majNum.length > 0 ? 1 : 0
+  return majority(array, index)
 }
