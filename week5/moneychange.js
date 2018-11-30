@@ -21,8 +21,18 @@ function readLine(line) {
 }
 
 function dpChange(money, coins) {
-	let change = 0
-	if (money === 0) return change
-	console.log(money, coins)
-	return coins.reduce((a, v) => a+v)
+	let minCoins = [0]
+	if (money === 0) return minCoins[0]
+
+	for (let m = 1; m <= money; m++) {
+		minCoins[m] = Number.POSITIVE_INFINITY
+		coins.forEach(c => {
+			if (m >= c) {
+				let numCoins = minCoins[m-c] + 1
+				if (numCoins < minCoins[m]) minCoins[m] = numCoins
+			}
+		})
+	}
+
+	return minCoins[money]
 }
