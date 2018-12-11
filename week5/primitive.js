@@ -30,12 +30,6 @@ function readLine(line) {
 }
 
 function primitive(n){
-  if (n === 1) {
-    return {
-      steps: 0,
-      intermediate: [1]
-    }
-  }
   let hops = [0]
   hops[1] = 1
 
@@ -71,7 +65,7 @@ function primitive(n){
   }
 
   return {
-    steps: optimal.length,
+    steps: optimal.length - 1,
     intermediate: optimal.reverse()
   }
 
