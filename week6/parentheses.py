@@ -1,5 +1,3 @@
-import re
-
 # Uses python3
 def evalt(a, b, op):
     if op == '+':
@@ -11,48 +9,39 @@ def evalt(a, b, op):
     else:
         assert False
 
-def minAndMax(i,j, m, M, ops):
-    minimum = float("inf")
-    maximum = float("-inf")
+def MinMax(i,j, op, m, M):
+    mmin = float("inf")
+    mmax = float("-inf")
 
-    if (i == j-1):
-        k=i
-        a = evalt(M[i][k], M[k+1][j], ops[k])
-        b = evalt(M[i][k], m[k+1][j], ops[k])
-        c = evalt(m[i][k], M[k+1][j], ops[k])
-        d = evalt(m[i][k], m[k+1][j], ops[k])
-        minimum = min(minimum, a, b, c ,d)
-        maximum = max(maximum, a, b, c ,d)
+    for k in range(i, j):
+        a = evalt(M[i][k], M[k+1][j], op[k])
+        b = evalt(M[i][k], m[k+1][j], op[k])
+        c = evalt(m[i][k], M[k+1][j], op[k])
+        d = evalt(m[i][k], m[k+1][j], op[k])
+        mmin = min(mmin, a, b, c, d)
+        mmax = max(mmax, a, b, c, d)
+    return(mmin, mmax)
 
+def parentheses(dataset):
+    op = dataset[1:len(dataset):2]
+    d = dataset[0:len(dataset)+1:2]
+    n = len(d)
 
-    for k in range(i, j-1):
-        a = evalt(M[i][k], M[k+1][j], ops[k])
-        b = evalt(M[i][k], m[k+1][j], ops[k])
-        c = evalt(m[i][k], M[k+1][j], ops[k])
-        d = evalt(m[i][k], m[k+1][j], ops[k])
-        minimum = min(minimum, a, b, c ,d)
-        maximum = max(maximum, a, b, c ,d)
+    m = [[0 for i in range(n)] for j in range(n)]  #minimized values
+    M = [[0 for i in range(n)] for j in range(n)]  #maximized values
 
-    return minimum, maximum
+    for i in range(n):
+        m[i][i] = int(d[i])   #so that the tables will look like
+        M[i][i] = int(d[i])   #[[i, 0, 0...], [0, i, 0...], [0, 0, i,...]]
 
-def parentheses(expression):
-    digits = [0] + [int(s) for s in re.findall(r'\d+', expression)]
-    ops = [0] + re.findall(r'\D+', expression)
+    for s in range(1,n):
+        for i in range(n-s):
+            j = i + s
+            m[i][j], M[i][j] = MinMax(i,j,op,m,M)
 
-    m = [[0 for i in range(len(digits))] for i in range(len(digits))]
-    M = [[0 for i in range(len(digits))] for i in range(len(digits))]
-
-    for i in range(1,len(digits)):
-        m[i][i] = digits[i]
-        M[i][i] = digits[i]
+    return M[0][n-1]
 
 
-    for s in range(1, len(digits)-1):
-        for i in range(1, len(digits)-s):
-            j = i+s
-            m[i][j], M[i][j] = minAndMax(i, j, m, M, ops)
-
-    return M[1][len(digits)-1]
 
 
 if __name__ == "__main__":
